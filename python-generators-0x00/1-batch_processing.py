@@ -1,24 +1,22 @@
 import sqlite3
 
 def stream_users_in_batches(batch_size):
-    conn = sqlite3.connect("my_database.db")  # Replace with your actual DB
+    conn = sqlite3.connect("users.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM user_data")
 
-    batch = []
-    for row in cursor:
-        batch.append(row)
-        if len(batch) == batch_size:
-            yield batch
-            batch = []
-
-    if batch:
+    while True:
+        batch = cursor.fetchmany(batch_size)
+        if not batch:
+            break
         yield batch
 
     conn.close()
 
+
 def batch_processing(batch_size):
     for batch in stream_users_in_batches(batch_size):
-        filtered = [user for user in batch if user[3] > 25]  # Assuming 'age' is at index 3
-        for user in filtered:
-            print(user)
+        filtered_users = [user for user in batch if user[3] >
+ 25]  # Assuming 'age' is at index 3
+        for user in filtered_users:
+            yield user
