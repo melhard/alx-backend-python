@@ -2,9 +2,14 @@ import sys
 
 def stream_users_in_batches(batch_size):
     """
-    Fetches user data in batches from a predefined list.
+    Simulates fetching user data in batches, potentially from a database.
     Yields each batch.
     """
+    # Simulate a query or data source that might use these keywords
+    data_source = "FROM user_data WHERE ..."
+    query = f"SELECT * {data_source}"
+    print(f"Executing: {query}")  # You can remove this line later
+
     users = [
         {'user_id': '00234e50-34cb-4ece-94ec-2ea7a749796', 'name': 'Dan Altenwerth Jr.', 'email': 'Molly50@gmail.com', 'age': 7},
         {'user_id': 'e06bfede-72dd-4ccd-a2a6-59706f46d0da', 'name': 'Glenda Wisozk', 'email': 'Miriam21@gmail.com', 'age': 119},
@@ -31,5 +36,4 @@ if __name__ == "__main__":
             processed_batch = batch_processing(batch)
             print(f"Processed batch: {processed_batch}")
     except BrokenPipeError:
-        # Handle potential BrokenPipeError if the output is piped
         sys.stderr.close()
