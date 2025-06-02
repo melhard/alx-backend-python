@@ -7,6 +7,19 @@ from client import GithubOrgClient
 
 class TestGithubOrgClient(unittest.TestCase):
     """اختبار GithubOrgClient"""
+    def test_public_repos_url(self):
+    """اختبار أن _public_repos_url تُرجع الرابط الصحيح من org"""
+
+    payload = {"repos_url": "https://api.github.com/orgs/testorg/repos"}
+
+    with patch.object(GithubOrgClient, "org", new_callable=PropertyMock) as mock_org:
+        mock_org.return_value = payload
+
+        client = GithubOrgClient("testorg")
+        result = client._public_repos_url
+
+        self.assertEqual(result, payload["repos_url"])
+
 
     @parameterized.expand([
         ("google",),
