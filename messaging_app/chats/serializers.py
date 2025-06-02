@@ -15,6 +15,11 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ['id', 'sender', 'message_body', 'sent_at']
 
+    def validate_message_body(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("Message body cannot be empty.")
+        return value
+
 
 class ConversationSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
