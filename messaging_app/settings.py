@@ -8,3 +8,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'chats',
 ]
+INSTALLED_APPS = [
+    ...
+    'rest_framework',  # تم إضافته
+    'chats',           # تم إضافته
+]
