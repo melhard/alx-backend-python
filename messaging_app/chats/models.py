@@ -1,27 +1,35 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.conf import settings
 
-# 1. توسيع المستخدم الافتراضي
+# نموذج مستخدم مخصص
 class User(AbstractUser):
-    # أضف هنا أي خصائص إضافية إن وجدت لاحقًا (مثل صورة، حالة، إلخ)
-    pass
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
 
-# 2. نموذج المحادثة
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+    USERNAME_FIELD = 'username'
+
+    def __str__(self):
+        return f"{self.username} ({self.email})"
+
+# نموذج المحادثة
 class Conversation(models.Model):
-    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='conversations')
+    conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    participants = models.ManyToManyField(User, related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Conversation {self.id}"
+        return f"Conversation {self.conversation_id}"
 
-# 3. نموذج الرسالة
+# نموذج الرسائل
 class Message(models.Model):
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
-    text = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    message_body = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Message from {self.sender.username} at {self.timestamp}"
-
+        return f"Message {self.message_id} from {self.sender.username}"
