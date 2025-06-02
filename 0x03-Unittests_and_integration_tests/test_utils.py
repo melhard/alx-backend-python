@@ -41,3 +41,35 @@ class TestGetJson(unittest.TestCase):
             result = get_json(test_url)
             mock_get.assert_called_once_with(test_url)
             self.assertEqual(result, test_payload)
+            from utils import memoize
+
+
+class TestMemoize(unittest.TestCase):
+    """اختبار المزخرف memoize"""
+
+    def test_memoize(self):
+        """تأكد أن memoize يخزن القيمة ولا يستدعي الدالة إلا مرة واحدة"""
+
+        class TestClass:
+            def a_method(self):
+                return 42
+
+            @memoize
+            def a_property(self):
+                return self.a_method()
+
+        with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
+            obj = TestClass()
+
+            # أول استدعاء
+            result1 = obj.a_property()
+            # ثاني استدعاء (يجب ألا يستدعي a_method مرة أخرى)
+            result2 = obj.a_property()
+
+            # تأكد من النتيجة صحيحة
+            self.assertEqual(result1, 42)
+            self.assertEqual(result2, 42)
+
+            # تأكد أن a_method تم استدعاؤها مرة واحدة فقط
+            mock_method.assert_called_once()
+
