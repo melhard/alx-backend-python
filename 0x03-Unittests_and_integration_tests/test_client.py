@@ -14,13 +14,13 @@ class TestGithubOrgClient(unittest.TestCase):
         ("google", {"login": "google"}),
         ("abc", {"login": "abc"}),
     ])
-    @patch("client.get_json")  # تأكد أن هذا المسار مطابق لاستيراد get_json في client.py
+    @patch("client.get_json")  # تأكد من صحة المسار هنا
     def test_org(self, org_name, expected, mock_get_json):
         """اختبار خاصية org"""
         mock_get_json.return_value = expected
 
         client = GithubOrgClient(org_name)
-        result = client.org  # استدعاء الخاصية org
+        result = client.org
 
         mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
         self.assertEqual(result, expected)
