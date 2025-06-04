@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-اختبار GithubOrgClient
-"""
+"""اختبار GithubOrgClient"""
 
 import unittest
 from unittest.mock import patch
@@ -10,16 +8,15 @@ from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """اختبار org في GithubOrgClient"""
+    """اختبار دالة org"""
 
     @parameterized.expand([
         ("google", {"login": "google"}),
         ("abc", {"login": "abc"}),
     ])
-    @patch("client.get_json")  # تأكد أن هذا يطابق ما في client.py
-    def test_org(self, org_name, expected_payload, mock_get_json):
-        mock_get_json.return_value = expected_payload
-
+    @patch("client.get_json")  # تأكد من تطابق هذا المسار مع import في client.py
+    def test_org(self, org_name, expected, mock_get_json):
+        mock_get_json.return_value = expected
         client = GithubOrgClient(org_name)
-        self.assertEqual(client.org, expected_payload)
+        self.assertEqual(client.org, expected)
         mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
