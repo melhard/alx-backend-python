@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+"""
+وحدة اختبار تشمل دوال utils:
+- access_nested_map: اختبار للوصول إلى القيم المتداخلة في القواميس.
+- get_json: اختبار لجلب البيانات من URL باستخدام JSON.
+- memoize: اختبار لتخزين نتائج الدوال.
+"""
 
 import unittest
 from parameterized import parameterized
