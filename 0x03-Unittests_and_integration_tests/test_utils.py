@@ -3,11 +3,10 @@
 
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map, get_json
+from utils import access_nested_map, get_json, memoize
 from unittest.mock import patch, Mock
 
 
-# اختبار دالة access_nested_map
 class TestAccessNestedMap(unittest.TestCase):
     """اختبار دالة access_nested_map."""
 
@@ -20,7 +19,6 @@ class TestAccessNestedMap(unittest.TestCase):
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
 
-# اختبار دالة get_json بدون استدعاء حقيقي للإنترنت
 class TestGetJson(unittest.TestCase):
     """اختبار دالة get_json."""
 
@@ -36,3 +34,21 @@ class TestGetJson(unittest.TestCase):
             result = get_json(test_url)
             mock_get.assert_called_once_with(test_url)
             self.assertEqual(result, test_payload)
+
+
+class TestMemoize(unittest.TestCase):
+    """اختبار دالة memoize."""
+
+    def test_memoize(self):
+        class TestClass:
+            def a_method(self):
+                return 42
+
+            @memoize
+            def a_property(self):
+                return self.a_method()
+
+        obj = TestClass()
+
+        # نختبر إن النتيجة اللي راجعة هي 42
+        self.assertEqual(obj.a_property, 42)
