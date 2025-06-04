@@ -3,6 +3,7 @@
 Test for memoize decorator
 """
 
+
 import unittest
 from unittest.mock import MagicMock
 
