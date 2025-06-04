@@ -4,7 +4,9 @@ from unittest.mock import patch
 from parameterized import parameterized
 from client import GithubOrgClient
 
+
 class TestGithubOrgClient(unittest.TestCase):
+
     @parameterized.expand([
         ("google", {"login": "google"}),
         ("abc", {"login": "abc"}),
