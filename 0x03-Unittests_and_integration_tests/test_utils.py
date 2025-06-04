@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Module docstring"""
+"""
+Test for memoize decorator
+"""
+
 
 import unittest
+from unittest.mock import MagicMock
 
-
-class TestMemoize(unittest.TestCase):
-    def test_memoize(self):
-        pass
-
+def memoize(fn):
+    """Memoize decorator"""
+    cache = {}
 
     def memoized_fn(*args):
         if args not in cache:
