@@ -5,14 +5,15 @@ Test for memoize decorator
 
 import unittest
 from unittest.mock import patch
-from utils import memoize  # If memoize is defined in utils.py
+from utils import memoize  # Use this if memoize is in utils.py
+
 
 class TestMemoize(unittest.TestCase):
     """Test class for memoize decorator"""
 
     def test_memoize(self):
-        """Test memoize caches results"""
-
+        """Test that memoize caches method result"""
+        
         class TestClass:
             def a_method(self):
                 return 42
@@ -23,10 +24,6 @@ class TestMemoize(unittest.TestCase):
 
         with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
             obj = TestClass()
-
-            result1 = obj.a_property()
-            result2 = obj.a_property()
-
-            self.assertEqual(result1, 42)
-            self.assertEqual(result2, 42)
+            self.assertEqual(obj.a_property(), 42)
+            self.assertEqual(obj.a_property(), 42)
             mock_method.assert_called_once()
