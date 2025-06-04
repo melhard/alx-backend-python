@@ -1,10 +1,4 @@
 #!/usr/bin/env python3
-"""
-Unit tests for utils module functions:
-- access_nested_map
-- get_json
-- memoize
-"""
 
 
 import unittest
@@ -22,6 +16,7 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": {"b": 2}}, ("a", "b"), 2),
     ])
     def test_access_nested_map(self, nested_map, path, expected):
+        """تأكد أن access_nested_map ترجع القيمة المتوقعة من القاموس."""
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
 
@@ -33,6 +28,7 @@ class TestGetJson(unittest.TestCase):
         ("http://holberton.io", {"payload": False}),
     ])
     def test_get_json(self, test_url, test_payload):
+        """تأكد أن get_json ترجع البيانات المتوقعة مع محاكاة requests.get."""
         mock_response = Mock()
         mock_response.json.return_value = test_payload
 
@@ -46,6 +42,7 @@ class TestMemoize(unittest.TestCase):
     """اختبار دالة memoize."""
 
     def test_memoize(self):
+        """تأكد أن memoize تحفظ وتعيد القيمة بشكل صحيح."""
         class TestClass:
             def a_method(self):
                 return 42
@@ -56,5 +53,4 @@ class TestMemoize(unittest.TestCase):
 
         obj = TestClass()
 
-        # نختبر إن النتيجة اللي راجعة هي 42
         self.assertEqual(obj.a_property, 42)
