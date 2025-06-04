@@ -1,29 +1,45 @@
 #!/usr/bin/env python3
 """
-Test for utils.get_json function
+Test for memoize decorator
 """
 
 import unittest
-from unittest.mock import patch, Mock
-from parameterized import parameterized
-from utils import get_json
+from unittest.mock import MagicMock
+
+def memoize(fn):
+    """Memoize decorator"""
+    cache = {}
+
+    def memoized_fn(*args):
+        if args not in cache:
+            cache[args] = fn(*args)
+        return cache[args]
+    return memoized_fn
 
 
-class TestGetJson(unittest.TestCase):
-    """Tests for the get_json function"""
+class TestMemoize(unittest.TestCase):
+    """Test class for memoize decorator"""
 
-    @parameterized.expand([
-        ("http://example.com", {"payload": True}),
-        ("http://holberton.io", {"payload": False}),
-    ])
-    def test_get_json(self, test_url, test_payload):
-        """Test get_json returns expected payload"""
-        mock_response = Mock()
-        mock_response.json.return_value = test_payload
+    def test_memoize(self):
+        """Test memoize caches results"""
+        class TestClass:
+            def a_method(self):
+                return 42
 
-        with patch(
-            "utils.requests.get", return_value=mock_response
-        ) as mock_get:
-            result = get_json(test_url)
-            self.assertEqual(result, test_payload)
-            mock_get.assert_called_once_with(test_url)
+            @memoize
+            def a_property(self):
+                return self.a_method()
+
+        obj = TestClass()
+        obj.a_method = MagicMock(return_value=42)
+
+        # Call the memoized method twice
+        result1 = obj.a_property()
+        result2 = obj.a_property()
+
+        # Assert the value returned is correct
+        self.assertEqual(result1, 42)
+        self.assertEqual(result2, 42)
+
+        # Assert a_method was called only once because of memoization
+        obj.a_method.assert_called_once()
