@@ -1,10 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-# مدير ORM مخصص للرسائل غير المقروءة
-class UnreadMessagesManager(models.Manager):
-    def for_user(self, user):
-        return self.get_queryset().filter(receiver=user, read=False).only('sender', 'content', 'timestamp')
+from .managers import UnreadMessagesManager  # ⬅ استدعاء المدير المخصص
 
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
@@ -12,13 +8,11 @@ class Message(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)
-    read = models.BooleanField(default=False)  # ➕ حقل لتتبع القراءة
+    read = models.BooleanField(default=False)
     parent_message = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
 
-    # المدير الافتراضي
-    objects = models.Manager()
-    # مدير مخصص للرسائل غير المقروءة
-    unread = UnreadMessagesManager()
+    objects = models.Manager()  # المدير الافتراضي
+    unread = UnreadMessagesManager()  # المدير المخصص للرسائل غير المقروءة
 
     def __str__(self):
-        return f'{self.sender} -> {self.receiver}: {self.content[:20]}'
+        return f"{self.sender} -> {self.receiver}: {self.content[:20]}"
