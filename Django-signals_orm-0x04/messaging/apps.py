@@ -5,4 +5,4 @@ class MessagingConfig(AppConfig):
     name = 'messaging'
 
     def ready(self):
-        import messaging.signals  # استيراد الإشارات عند تشغيل التطبيق
+        import messaging.signals  # ✅ لتفعيل الإشارات
