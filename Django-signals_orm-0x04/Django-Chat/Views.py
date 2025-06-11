@@ -1,10 +1,23 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
-from django.contrib.auth import logout
+from django.shortcuts import render
+from .models import Message
 
-@login_required
-def delete_user(request):
-    user = request.user
-    logout(request)  # Log out user to avoid session issues after deletion
-    user.delete()    # Delete user instance (triggers signals)
-    return redirect('home')  # Redirect to homepage or login page, adjust as needed
+def conversation_view(request):
+    current_user = request.user
+
+    # استرجاع الرسائل الرئيسية (التي ليست ردودًا)
+    top_messages = Message.objects.filter(
+        receiver=current_user, parent_message__isnull=True
+    ).select_related('sender', 'receiver').prefetch_related('replies')
+
+    # دالة لإرجاع الردود بشكل متداخل (متفرع)
+    def get_message_thread(message):
+        return {
+            'message': message,
+            'replies': [get_message_thread(reply) for reply in message.replies.all()]
+        }
+
+    threaded_conversations = [get_message_thread(msg) for msg in top_messages]
+
+    return render(request, 'conversation.html', {
+        'threaded_conversations': threaded_conversations
+    })
