@@ -2,19 +2,22 @@ from django.shortcuts import render
 from .models import Message
 
 def conversation_view(request):
-    # استرجاع الرسائل الأساسية التي ليست ردودًا
-    top_level_messages = Message.objects.filter(
-        receiver=request.user,
+    # استرجاع كل الرسائل التي أرسلها المستخدم ولم تكن ردًا
+    messages = Message.objects.filter(
+        sender=request.user,
         parent_message__isnull=True
     ).select_related('sender', 'receiver').prefetch_related('replies')
 
-    # دالة لتكرار الرسائل والردود
+    # دالة لاسترجاع الردود بشكل متكرر
     def get_message_thread(message):
         return {
             'message': message,
             'replies': [get_message_thread(reply) for reply in message.replies.all()]
         }
 
-    threads = [get_message_thread(msg) for msg in top_level_messages]
+    # تجميع المحادثات
+    threaded_conversations = [get_message_thread(msg) for msg in messages]
 
-    return render(request, 'conversation.html', {'threaded_conversations': threads})
+    return render(request, 'conversation.html', {
+        'threaded_conversations': threaded_conversations
+    })
