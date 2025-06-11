@@ -1,8 +1,8 @@
 from django.apps import AppConfig
 
-class DjangoChatConfig(AppConfig):
+class MessagingConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'Django-Chat'
+    name = 'messaging'
 
     def ready(self):
-        import Django_Chat.signals  # تفعيل الإشارات
+        import messaging.signals  # ✅ لتفعيل الإشارات
