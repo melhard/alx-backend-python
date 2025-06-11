@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import conversation_view
+from .views import unread_messages_view
 
 urlpatterns = [
-    path('conversations/', conversation_view, name='conversation_view'),
+    path('unread/', unread_messages_view, name='unread_messages'),
 ]
