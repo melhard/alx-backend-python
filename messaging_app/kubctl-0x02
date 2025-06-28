@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Apply both blue and green deployments
+kubectl apply -f blue_deployment.yaml
+kubectl apply -f green_deployment.yaml
+
+# Apply the service (initially pointing to blue)
+kubectl apply -f kubeservice.yaml
+
+# Check pod statuses
+kubectl get pods
+
+# Check logs for green deployment
+kubectl logs -l app=messaging-app-green
+
+echo "Blue-Green Deployment applied. Service is currently pointing to blue."
