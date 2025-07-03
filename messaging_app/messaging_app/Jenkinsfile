@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo '🔄 Checking out code from GitHub...'
-                git 'https://github.com/<melhard>/alx-backend-python.git'
+                git 'https://github.com/melhard/alx-backend-python.git'
                 sh 'git branch' // REQUIRED for automated checker
             }
         }
